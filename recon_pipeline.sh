@@ -330,11 +330,11 @@ stage_nuclei() {
         return
     fi
 
-    local n_critical n_high n_medium
-    n_critical=$(grep -c "\[critical\]" "$NUCLEI_OUT" 2>/dev/null || echo 0)
-    n_high=$(grep    -c "\[high\]"     "$NUCLEI_OUT" 2>/dev/null || echo 0)
-    n_medium=$(grep  -c "\[medium\]"   "$NUCLEI_OUT" 2>/dev/null || echo 0)
-    local total=$(( n_critical + n_high + n_medium ))
+    local n_critical n_high n_medium total
+    n_critical=$(grep -c "\[critical\]" "$NUCLEI_OUT" 2>/dev/null || true); n_critical=${n_critical//[^0-9]/}; n_critical=${n_critical:-0}
+    n_high=$(grep    -c "\[high\]"     "$NUCLEI_OUT" 2>/dev/null || true); n_high=${n_high//[^0-9]/};         n_high=${n_high:-0}
+    n_medium=$(grep  -c "\[medium\]"   "$NUCLEI_OUT" 2>/dev/null || true); n_medium=${n_medium//[^0-9]/};     n_medium=${n_medium:-0}
+    total=$(( n_critical + n_high + n_medium ))
 
     grep "\[critical\]" "$NUCLEI_OUT" > "${NUCLEI_DIR}/critical.txt" 2>/dev/null || true
     grep "\[high\]"     "$NUCLEI_OUT" > "${NUCLEI_DIR}/high.txt"     2>/dev/null || true
@@ -367,9 +367,9 @@ write_summary() {
     banner "Pipeline Complete — Summary"
 
     local n_critical n_high n_medium
-    n_critical=$(grep -c "\[critical\]" "$NUCLEI_OUT" 2>/dev/null || echo 0)
-    n_high=$(grep    -c "\[high\]"     "$NUCLEI_OUT" 2>/dev/null || echo 0)
-    n_medium=$(grep  -c "\[medium\]"   "$NUCLEI_OUT" 2>/dev/null || echo 0)
+    n_critical=$(grep -c "\[critical\]" "$NUCLEI_OUT" 2>/dev/null || true); n_critical=${n_critical//[^0-9]/}; n_critical=${n_critical:-0}
+    n_high=$(grep    -c "\[high\]"     "$NUCLEI_OUT" 2>/dev/null || true); n_high=${n_high//[^0-9]/};         n_high=${n_high:-0}
+    n_medium=$(grep  -c "\[medium\]"   "$NUCLEI_OUT" 2>/dev/null || true); n_medium=${n_medium//[^0-9]/};     n_medium=${n_medium:-0}
 
     {
         echo "========================================"
